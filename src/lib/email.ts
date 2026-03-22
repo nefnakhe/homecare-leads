@@ -1,5 +1,5 @@
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const EMAIL_FROM = process.env.EMAIL_FROM || "noreply@homecareleads.com";
+const EMAIL_FROM = process.env.EMAIL_FROM || "noreply@privatehomecarehq.com";
 const BASE_URL = process.env.NEXTAUTH_URL || "http://localhost:3000";
 
 async function sendEmail({

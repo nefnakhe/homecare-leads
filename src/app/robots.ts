@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/dashboard/", "/onboarding/"],
     },
-    sitemap: "https://homecareleads.com/sitemap.xml",
+    sitemap: "https://privatehomecarehq.com/sitemap.xml",
   };
 }

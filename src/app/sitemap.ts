@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { getAllCitySlugs } from "@/lib/cities";
 import { getAllGuideSlugs } from "@/lib/guides";
 
-const BASE_URL = "https://homecareleads.com";
+const BASE_URL = "https://privatehomecarehq.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
