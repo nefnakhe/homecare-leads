@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
-import { stripe } from "@/lib/stripe";
+import { stripe, PRIORITY_PASS } from "@/lib/stripe";
 import { db } from "@/db";
-import { agencies } from "@/db/schema";
+import { agencies, billingEvents } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import Stripe from "stripe";
 
@@ -31,54 +31,31 @@ export async function POST(req: Request) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
       const agencyId = session.metadata?.agencyId;
-      if (agencyId && session.subscription) {
-        const subscription = await stripe.subscriptions.retrieve(
-          session.subscription as string
-        );
+      const checkoutType = session.metadata?.type;
+
+      if (agencyId && checkoutType === "priority_pass") {
+        const now = new Date();
+        const expiresAt = new Date(now);
+        expiresAt.setMonth(expiresAt.getMonth() + PRIORITY_PASS.durationMonths);
+
         await db
           .update(agencies)
           .set({
-            stripeSubscriptionId: subscription.id,
-            subscriptionStatus: "active",
-            subscriptionPriceId: subscription.items.data[0]?.price.id,
-            updatedAt: new Date(),
+            priorityPassPurchasedAt: now,
+            priorityPassExpiresAt: expiresAt,
+            updatedAt: now,
           })
           .where(eq(agencies.id, agencyId));
+
+        // Record billing event
+        await db.insert(billingEvents).values({
+          agencyId,
+          type: "priority_pass",
+          amountCents: PRIORITY_PASS.priceCents,
+          stripePaymentIntentId: session.payment_intent as string,
+          status: "succeeded",
+        });
       }
-      break;
-    }
-
-    case "customer.subscription.updated": {
-      const subscription = event.data.object as Stripe.Subscription;
-      const customerId = subscription.customer as string;
-      const status = subscription.status as
-        | "active"
-        | "past_due"
-        | "canceled"
-        | "trialing"
-        | "incomplete";
-
-      await db
-        .update(agencies)
-        .set({
-          subscriptionStatus: status,
-          subscriptionPriceId: subscription.items.data[0]?.price.id,
-          updatedAt: new Date(),
-        })
-        .where(eq(agencies.stripeCustomerId, customerId));
-      break;
-    }
-
-    case "customer.subscription.deleted": {
-      const subscription = event.data.object as Stripe.Subscription;
-      const customerId = subscription.customer as string;
-      await db
-        .update(agencies)
-        .set({
-          subscriptionStatus: "canceled",
-          updatedAt: new Date(),
-        })
-        .where(eq(agencies.stripeCustomerId, customerId));
       break;
     }
   }

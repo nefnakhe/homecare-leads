@@ -65,7 +65,6 @@ export async function POST(req: NextRequest) {
       data.paymentType === "long_term_care_insurance";
 
     if (!isPrivatePay) {
-      // Save the lead but mark as disqualified
       await db.insert(leads).values({
         ...data,
         isPrivatePay: false,
@@ -100,10 +99,11 @@ export async function POST(req: NextRequest) {
         status: "qualified",
         score: scoreResult.score,
         scoreFactors: scoreResult.factors,
+        maxMatches: 1, // All leads are exclusive
       })
       .returning();
 
-    // ── Geo-match to agencies ─────────────────────────────────────────
+    // ── Geo-match to agencies (admin-approved, Priority Pass first) ──
     const allAgencies = await db
       .select({
         id: agencies.id,
@@ -113,7 +113,8 @@ export async function POST(req: NextRequest) {
         specialties: agencies.specialties,
         maxLeadsPerMonth: agencies.maxLeadsPerMonth,
         currentCapacity: agencies.currentCapacity,
-        subscriptionStatus: agencies.subscriptionStatus,
+        adminApproved: agencies.adminApproved,
+        priorityPassExpiresAt: agencies.priorityPassExpiresAt,
       })
       .from(agencies)
       .innerJoin(users, eq(users.id, agencies.userId))
@@ -129,24 +130,24 @@ export async function POST(req: NextRequest) {
         specialties: (a.specialties as string[]) || [],
         maxLeadsPerMonth: a.maxLeadsPerMonth ?? 50,
         currentCapacity: a.currentCapacity ?? 0,
-        subscriptionStatus: a.subscriptionStatus,
+        adminApproved: a.adminApproved,
+        priorityPassExpiresAt: a.priorityPassExpiresAt,
       })),
-      lead.maxMatches
+      1 // Exclusive: 1 agency per lead
     );
 
     if (matches.length > 0) {
-      // Save match records
       await db.insert(leadMatches).values(
         matches.map((m) => ({
           leadId: lead.id,
           agencyId: m.agencyId,
           matchScore: m.matchScore,
+          isExclusive: true,
           status: "delivered" as const,
           deliveredAt: new Date(),
         }))
       );
 
-      // Update lead status and match count
       await db
         .update(leads)
         .set({
@@ -156,7 +157,6 @@ export async function POST(req: NextRequest) {
         })
         .where(eq(leads.id, lead.id));
 
-      // Increment agency capacity counters
       for (const match of matches) {
         await db
           .update(agencies)
@@ -184,7 +184,6 @@ export async function POST(req: NextRequest) {
         })
       );
 
-      // Fire-and-forget emails but don't fail the request
       Promise.all(emailPromises);
     }
 

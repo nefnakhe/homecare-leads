@@ -1,7 +1,13 @@
 /**
  * Geo-matching engine.
- * Matches qualified leads to agencies based on ZIP code overlap and specialty match.
- * Returns up to maxMatches agencies sorted by match quality.
+ *
+ * Matches qualified leads to agencies based on:
+ *  1. Priority Pass status (Priority Pass holders get first pick)
+ *  2. ZIP code overlap (geo match)
+ *  3. Specialty match
+ *
+ * All leads are exclusive — matched to 1 agency only.
+ * Agencies must be admin-approved to receive leads.
  */
 
 type Agency = {
@@ -12,7 +18,8 @@ type Agency = {
   specialties: string[];
   maxLeadsPerMonth: number;
   currentCapacity: number;
-  subscriptionStatus: string | null;
+  adminApproved: boolean;
+  priorityPassExpiresAt: Date | null;
 };
 
 type MatchResult = {
@@ -26,13 +33,13 @@ export function matchLeadToAgencies(
   leadZip: string,
   leadCareType: string,
   agencies: Agency[],
-  maxMatches: number = 3
+  maxMatches: number = 1
 ): MatchResult[] {
-  const scored: MatchResult[] = [];
+  const scored: (MatchResult & { hasPriorityPass: boolean })[] = [];
 
   for (const agency of agencies) {
-    // Must have active subscription
-    if (agency.subscriptionStatus !== "active" && agency.subscriptionStatus !== "trialing") {
+    // Must be admin-approved
+    if (!agency.adminApproved) {
       continue;
     }
 
@@ -64,7 +71,6 @@ export function matchLeadToAgencies(
     if (agency.specialties.includes(leadCareType)) {
       score += 40;
     } else {
-      // Partial credit for related care types
       const relatedTypes: Record<string, string[]> = {
         personal_care: ["companion_care", "live_in_care"],
         companion_care: ["personal_care", "respite_care"],
@@ -81,20 +87,36 @@ export function matchLeadToAgencies(
       if (hasRelated) {
         score += 20;
       } else {
-        score += 5; // minimal credit — agency is in area but not specialized
+        score += 5;
       }
     }
+
+    // Check if Priority Pass is active
+    const hasPriorityPass =
+      agency.priorityPassExpiresAt !== null &&
+      agency.priorityPassExpiresAt > new Date();
 
     scored.push({
       agencyId: agency.id,
       agencyName: agency.name,
       agencyEmail: agency.email,
       matchScore: score,
+      hasPriorityPass,
     });
   }
 
-  // Sort by match score descending, take top N
-  return scored
-    .sort((a, b) => b.matchScore - a.matchScore)
-    .slice(0, maxMatches);
+  // Sort: Priority Pass holders first, then by match score descending
+  scored.sort((a, b) => {
+    if (a.hasPriorityPass !== b.hasPriorityPass) {
+      return a.hasPriorityPass ? -1 : 1;
+    }
+    return b.matchScore - a.matchScore;
+  });
+
+  return scored.slice(0, maxMatches).map((item) => ({
+    agencyId: item.agencyId,
+    agencyName: item.agencyName,
+    agencyEmail: item.agencyEmail,
+    matchScore: item.matchScore,
+  }));
 }

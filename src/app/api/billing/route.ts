@@ -29,7 +29,6 @@ export async function GET() {
         type: billingEvents.type,
         amountCents: billingEvents.amountCents,
         careType: billingEvents.careType,
-        isExclusive: billingEvents.isExclusive,
         status: billingEvents.status,
         failureReason: billingEvents.failureReason,
         stripePaymentIntentId: billingEvents.stripePaymentIntentId,
@@ -41,7 +40,7 @@ export async function GET() {
         leadZip: leads.zip,
       })
       .from(billingEvents)
-      .innerJoin(leads, eq(leads.id, billingEvents.leadId))
+      .leftJoin(leads, eq(leads.id, billingEvents.leadId))
       .where(eq(billingEvents.agencyId, agency.id))
       .orderBy(desc(billingEvents.createdAt));
 
@@ -49,8 +48,8 @@ export async function GET() {
     const totalChargedCents = events
       .filter((e) => e.status === "succeeded")
       .reduce((sum, e) => sum + e.amountCents, 0);
-    const totalLeadsAccepted = events.filter(
-      (e) => e.type === "lead_charge" && e.status === "succeeded"
+    const totalLeadsCharged = events.filter(
+      (e) => (e.type === "lead_charge" || e.type === "onboarding_fee") && e.status === "succeeded"
     ).length;
     const failedCharges = events.filter((e) => e.status === "failed").length;
 
@@ -58,7 +57,7 @@ export async function GET() {
       events,
       summary: {
         totalChargedCents,
-        totalLeadsAccepted,
+        totalLeadsAccepted: totalLeadsCharged,
         failedCharges,
       },
     });

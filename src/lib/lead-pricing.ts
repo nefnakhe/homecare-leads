@@ -1,31 +1,18 @@
 /**
- * Per-lead pricing by care type.
+ * Per-lead pricing — flat rate per confirmed lead.
  *
- * Base rates (cents):
- *   $75  — companion_care, personal_care, respite_care, other
- *   $150 — skilled_nursing, post_surgery, dementia_care
- *   $200 — live_in_care, hospice_support
+ * $300  onboarding fee +
+ * $2,000 lead fee
+ * ─────────────────────
+ * $2,300 total per confirmed lead
  *
- * Exclusive leads: +50% surcharge
+ * Charges triggered by admin confirmation, not agency acceptance.
  */
 
-const BASE_PRICES_CENTS: Record<string, number> = {
-  companion_care: 7500,
-  personal_care: 7500,
-  respite_care: 7500,
-  other: 7500,
-  skilled_nursing: 15000,
-  post_surgery: 15000,
-  dementia_care: 15000,
-  live_in_care: 20000,
-  hospice_support: 20000,
-};
-
-export function getLeadPriceCents(careType: string, isExclusive: boolean): number {
-  const base = BASE_PRICES_CENTS[careType] ?? 7500;
-  return isExclusive ? Math.round(base * 1.5) : base;
-}
+export const ONBOARDING_FEE_CENTS = 30000; // $300
+export const LEAD_FEE_CENTS = 200000; // $2,000
+export const TOTAL_LEAD_CHARGE_CENTS = 230000; // $2,300
 
 export function formatCents(cents: number): string {
-  return `$${(cents / 100).toFixed(2)}`;
+  return `$${(cents / 100).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 }

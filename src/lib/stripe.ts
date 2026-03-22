@@ -19,44 +19,18 @@ export const stripe = new Proxy({} as Stripe, {
   },
 });
 
-export const PLANS = {
-  starter: {
-    name: "Starter",
-    price: 149,
-    priceId: process.env.STRIPE_PRICE_ID_STARTER || "",
-    leads: 10,
-    features: [
-      "Up to 10 leads/month",
-      "Email notifications",
-      "Basic lead details",
-      "Standard support",
-    ],
-  },
-  growth: {
-    name: "Growth",
-    price: 349,
-    priceId: process.env.STRIPE_PRICE_ID_GROWTH || "",
-    leads: 30,
-    features: [
-      "Up to 30 leads/month",
-      "SMS + email notifications",
-      "Full lead details with care assessment",
-      "Priority lead delivery",
-      "Priority support",
-    ],
-  },
-  premium: {
-    name: "Premium",
-    price: 699,
-    priceId: process.env.STRIPE_PRICE_ID_PREMIUM || "",
-    leads: 75,
-    features: [
-      "Up to 75 leads/month",
-      "Instant SMS + email notifications",
-      "Full lead details with care assessment",
-      "First-priority lead delivery",
-      "Exclusive territory options",
-      "Dedicated account manager",
-    ],
-  },
+// Priority Pass: $197 one-time for 3 months of priority lead delivery
+export const PRIORITY_PASS = {
+  name: "Priority Pass",
+  price: 197,
+  priceCents: 19700,
+  durationMonths: 3,
+  priceId: process.env.STRIPE_PRICE_ID_PRIORITY_PASS || "",
+} as const;
+
+// Per-lead pricing: flat rate charged on admin confirmation
+export const LEAD_FEES = {
+  onboardingFeeCents: 30000, // $300 onboarding fee per lead
+  leadFeeCents: 200000, // $2,000 lead fee per lead
+  totalCents: 230000, // $2,300 total per confirmed lead
 } as const;

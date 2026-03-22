@@ -15,6 +15,7 @@ interface LeadMatch {
   contactedAt: string | null;
   acceptedAt: string | null;
   passedAt: string | null;
+  adminConfirmed?: boolean;
   leadId: string;
   firstName: string;
   lastName: string;
@@ -48,23 +49,6 @@ const STATUS_COLORS: Record<string, string> = {
   pending: "bg-gray-100 text-gray-600",
   expired: "bg-gray-100 text-gray-400",
 };
-
-const LEAD_PRICES: Record<string, number> = {
-  companion_care: 75,
-  personal_care: 75,
-  respite_care: 75,
-  other: 75,
-  skilled_nursing: 150,
-  post_surgery: 150,
-  dementia_care: 150,
-  live_in_care: 200,
-  hospice_support: 200,
-};
-
-function getLeadPrice(careType: string, isExclusive: boolean) {
-  const base = LEAD_PRICES[careType] ?? 75;
-  return isExclusive ? Math.round(base * 1.5) : base;
-}
 
 function formatCareType(ct: string) {
   return ct.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
@@ -285,7 +269,6 @@ export default function LeadsPage() {
           <div className="space-y-3">
             {filtered.map((lead) => {
               const canAct = !["accepted", "passed", "expired"].includes(lead.matchStatus);
-              const price = getLeadPrice(lead.careType, lead.isExclusive);
               const isLoading = actionLoading === lead.matchId;
 
               return (
@@ -312,7 +295,6 @@ export default function LeadsPage() {
                     className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition text-left"
                   >
                     <div className="flex items-center gap-4 min-w-0">
-                      {/* Score badge */}
                       {lead.score && (
                         <span
                           className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
@@ -329,11 +311,9 @@ export default function LeadsPage() {
                           <span className="font-normal text-gray-500 ml-2">
                             {formatCareType(lead.careType)}
                           </span>
-                          {lead.isExclusive && (
-                            <span className="ml-2 px-1.5 py-0.5 bg-violet-100 text-violet-700 text-xs font-medium rounded">
-                              Exclusive
-                            </span>
-                          )}
+                          <span className="ml-2 px-1.5 py-0.5 bg-violet-100 text-violet-700 text-xs font-medium rounded">
+                            Exclusive
+                          </span>
                         </p>
                         <p className="text-sm text-gray-500">
                           {lead.city ? `${lead.city}, ` : ""}
@@ -346,11 +326,6 @@ export default function LeadsPage() {
                     </div>
 
                     <div className="flex items-center gap-3 shrink-0">
-                      {canAct && (
-                        <span className="text-sm font-semibold text-gray-700">
-                          ${price}
-                        </span>
-                      )}
                       <span
                         className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
                           STATUS_COLORS[lead.matchStatus] || STATUS_COLORS.pending
@@ -446,7 +421,7 @@ export default function LeadsPage() {
                               disabled={isLoading}
                               className="bg-emerald-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                              {isLoading ? "Processing..." : `Accept Lead ($${price})`}
+                              {isLoading ? "Processing..." : "Accept Lead"}
                             </button>
                             <button
                               onClick={() => passLead(lead.matchId)}

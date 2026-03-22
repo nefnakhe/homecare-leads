@@ -175,7 +175,6 @@ export async function PATCH(req: Request) {
                 .where(eq(leads.id, dispute.leadId))
                 .limit(1)
             )[0]?.careType || "other",
-          isExclusive: false,
           status: "refunded",
         })
         .returning();

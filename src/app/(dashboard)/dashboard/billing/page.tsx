@@ -9,17 +9,16 @@ interface BillingEvent {
   id: string;
   type: string;
   amountCents: number;
-  careType: string;
-  isExclusive: boolean;
+  careType: string | null;
   status: string;
   failureReason: string | null;
   stripePaymentIntentId: string | null;
   createdAt: string;
-  leadFirstName: string;
-  leadLastName: string;
+  leadFirstName: string | null;
+  leadLastName: string | null;
   leadCity: string | null;
   leadState: string | null;
-  leadZip: string;
+  leadZip: string | null;
 }
 
 interface BillingSummary {
@@ -132,7 +131,7 @@ export default function BillingPage() {
         {events.length === 0 ? (
           <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
             <p className="text-gray-500 text-lg">
-              No billing events yet. Charges will appear here when you accept leads.
+              No billing events yet. Charges will appear here when leads are confirmed.
             </p>
           </div>
         ) : (
@@ -156,20 +155,21 @@ export default function BillingPage() {
                         {formatDate(event.createdAt)}
                       </td>
                       <td className="px-5 py-3">
-                        <p className="font-medium text-gray-900">
-                          {event.leadFirstName} {event.leadLastName.charAt(0)}.
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {event.leadCity ? `${event.leadCity}, ` : ""}{event.leadState || ""} {event.leadZip}
-                        </p>
+                        {event.leadFirstName ? (
+                          <>
+                            <p className="font-medium text-gray-900">
+                              {event.leadFirstName} {event.leadLastName?.charAt(0)}.
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {event.leadCity ? `${event.leadCity}, ` : ""}{event.leadState || ""} {event.leadZip || ""}
+                            </p>
+                          </>
+                        ) : (
+                          <p className="text-gray-500">—</p>
+                        )}
                       </td>
                       <td className="px-5 py-3 text-gray-600">
-                        {formatCareType(event.careType)}
-                        {event.isExclusive && (
-                          <span className="ml-1 px-1.5 py-0.5 bg-violet-100 text-violet-700 text-xs font-medium rounded">
-                            Exclusive
-                          </span>
-                        )}
+                        {event.careType ? formatCareType(event.careType) : "—"}
                       </td>
                       <td className="px-5 py-3 text-gray-600 capitalize">
                         {event.type.replace(/_/g, " ")}

@@ -55,13 +55,13 @@ export default function Home() {
                 href="/register"
                 className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold rounded-lg bg-white text-[#2563eb] hover:bg-gray-50 transition-colors shadow-lg"
               >
-                Get Started
+                Join Free
               </Link>
               <a
                 href="#pricing"
                 className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold rounded-lg border-2 border-white text-white hover:bg-white/10 transition-colors"
               >
-                View Pricing
+                See How It Works
               </a>
             </div>
           </div>
@@ -169,16 +169,16 @@ export default function Home() {
                 Leads delivered instantly via email and SMS. First to respond wins.
               </p>
             </div>
-            {/* No Long-Term Contracts */}
+            {/* Free to Join */}
             <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
               <div className="w-12 h-12 rounded-lg bg-[#2563eb]/10 flex items-center justify-center">
                 <svg className="w-6 h-6 text-[#2563eb]" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg>
               </div>
-              <h3 className="mt-4 text-lg font-semibold text-gray-900">No Long-Term Contracts</h3>
+              <h3 className="mt-4 text-lg font-semibold text-gray-900">Free to Join</h3>
               <p className="mt-2 text-gray-600 leading-relaxed">
-                Month-to-month subscriptions. Cancel anytime.
+                No subscription. No monthly fees. You only pay when you receive a confirmed, qualified lead.
               </p>
             </div>
           </div>
@@ -190,88 +190,84 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
-              Simple, Transparent Pricing
+              Simple, Pay-Per-Lead Pricing
             </h2>
             <p className="mt-4 text-lg text-gray-600">
-              Choose the plan that fits your agency. No hidden fees. No long-term commitments.
+              Join free. Receive qualified, exclusive leads. Pay only for confirmed leads.
             </p>
           </div>
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Starter */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-8 flex flex-col">
-              <h3 className="text-lg font-semibold text-gray-900">Starter</h3>
-              <div className="mt-4 flex items-baseline gap-1">
-                <span className="text-4xl font-bold text-gray-900">$149</span>
-                <span className="text-gray-500">/mo</span>
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Per-Lead Pricing */}
+            <div className="rounded-2xl border-2 border-[#2563eb] bg-white p-8 flex flex-col relative shadow-lg">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#2563eb] text-white text-xs font-semibold px-4 py-1 rounded-full uppercase tracking-wide">
+                Per-Lead
               </div>
+              <h3 className="text-lg font-semibold text-gray-900">Qualified Lead</h3>
+              <div className="mt-4 flex items-baseline gap-1">
+                <span className="text-4xl font-bold text-gray-900">$2,300</span>
+                <span className="text-gray-500">/lead</span>
+              </div>
+              <p className="mt-2 text-sm text-gray-500">$300 onboarding + $2,000 lead fee</p>
               <ul className="mt-8 space-y-4 flex-1">
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">Up to 10 leads/month</span>
+                  <span className="text-gray-600">Free to join — no monthly fees</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">Email notifications</span>
+                  <span className="text-gray-600">Exclusive leads — 1 agency per lead</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">Basic lead details</span>
+                  <span className="text-gray-600">Pre-qualified private-pay families</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">Standard support</span>
+                  <span className="text-gray-600">Only charged after quality verification</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                  </svg>
+                  <span className="text-gray-600">Dispute protection on unqualified leads</span>
                 </li>
               </ul>
               <Link
                 href="/register"
-                className="mt-8 block text-center px-6 py-3 rounded-lg border-2 border-[#2563eb] text-[#2563eb] font-semibold hover:bg-[#2563eb]/5 transition-colors"
+                className="mt-8 block text-center px-6 py-3 rounded-lg bg-[#2563eb] text-white font-semibold hover:bg-[#1d4ed8] transition-colors"
               >
-                Get Started
+                Join Free
               </Link>
             </div>
 
-            {/* Growth (Recommended) */}
-            <div className="rounded-2xl border-2 border-[#2563eb] bg-white p-8 flex flex-col relative shadow-lg">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#2563eb] text-white text-xs font-semibold px-4 py-1 rounded-full uppercase tracking-wide">
-                Recommended
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">Growth</h3>
+            {/* Priority Pass */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-8 flex flex-col">
+              <h3 className="text-lg font-semibold text-gray-900">Priority Pass</h3>
               <div className="mt-4 flex items-baseline gap-1">
-                <span className="text-4xl font-bold text-gray-900">$349</span>
-                <span className="text-gray-500">/mo</span>
+                <span className="text-4xl font-bold text-gray-900">$197</span>
+                <span className="text-gray-500">/3 months</span>
               </div>
+              <p className="mt-2 text-sm text-gray-500">One-time payment, not a subscription</p>
               <ul className="mt-8 space-y-4 flex-1">
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">Up to 30 leads/month</span>
+                  <span className="text-gray-600">Get leads delivered before free agencies</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">SMS + email notifications</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                  </svg>
-                  <span className="text-gray-600">Full lead details with care assessment</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                  </svg>
-                  <span className="text-gray-600">Priority lead delivery</span>
+                  <span className="text-gray-600">First pick on all exclusive leads</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -279,65 +275,18 @@ export default function Home() {
                   </svg>
                   <span className="text-gray-600">Priority support</span>
                 </li>
-              </ul>
-              <Link
-                href="/register"
-                className="mt-8 block text-center px-6 py-3 rounded-lg bg-[#2563eb] text-white font-semibold hover:bg-[#1d4ed8] transition-colors"
-              >
-                Get Started
-              </Link>
-            </div>
-
-            {/* Premium */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-8 flex flex-col">
-              <h3 className="text-lg font-semibold text-gray-900">Premium</h3>
-              <div className="mt-4 flex items-baseline gap-1">
-                <span className="text-4xl font-bold text-gray-900">$699</span>
-                <span className="text-gray-500">/mo</span>
-              </div>
-              <ul className="mt-8 space-y-4 flex-1">
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">Up to 75 leads/month</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                  </svg>
-                  <span className="text-gray-600">Instant SMS + email</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                  </svg>
-                  <span className="text-gray-600">Full lead details with care assessment</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                  </svg>
-                  <span className="text-gray-600">First-priority delivery</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                  </svg>
-                  <span className="text-gray-600">Exclusive territory options</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                  </svg>
-                  <span className="text-gray-600">Dedicated account manager</span>
+                  <span className="text-gray-600">Per-lead charges still apply ($2,300/lead)</span>
                 </li>
               </ul>
               <Link
                 href="/register"
                 className="mt-8 block text-center px-6 py-3 rounded-lg border-2 border-[#2563eb] text-[#2563eb] font-semibold hover:bg-[#2563eb]/5 transition-colors"
               >
-                Get Started
+                Join Free, Then Upgrade
               </Link>
             </div>
           </div>
@@ -366,7 +315,7 @@ export default function Home() {
                 How quickly will I receive leads?
               </h3>
               <p className="mt-3 text-gray-600 leading-relaxed">
-                Most agencies receive their first leads within 48 hours of activating their subscription.
+                Most agencies receive their first leads within 48 hours of being approved. There&apos;s no subscription required — you only pay $2,300 per confirmed lead.
               </p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
@@ -382,7 +331,7 @@ export default function Home() {
                 What if a lead doesn&apos;t convert?
               </h3>
               <p className="mt-3 text-gray-600 leading-relaxed">
-                We stand behind our qualification process. If a lead is clearly unqualified (e.g., Medicaid-only), contact us for a credit.
+                Every lead is verified before you&apos;re charged. If a confirmed lead turns out to be unqualified (e.g., invalid contact, not private-pay), submit a dispute for a full refund.
               </p>
             </div>
           </div>

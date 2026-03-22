@@ -13,14 +13,6 @@ import {
 
 export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
 
-export const subscriptionStatusEnum = pgEnum("subscription_status", [
-  "trialing",
-  "active",
-  "past_due",
-  "canceled",
-  "incomplete",
-]);
-
 export const onboardingStatusEnum = pgEnum("onboarding_status", [
   "pending",
   "in_progress",
@@ -76,11 +68,15 @@ export const agencies = pgTable("agencies", {
     .default("pending")
     .notNull(),
 
+  // Admin approval (license, service area verification)
+  adminApproved: boolean("admin_approved").default(false).notNull(),
+
   // Stripe
   stripeCustomerId: text("stripe_customer_id"),
-  stripeSubscriptionId: text("stripe_subscription_id"),
-  subscriptionStatus: subscriptionStatusEnum("subscription_status"),
-  subscriptionPriceId: text("subscription_price_id"),
+
+  // Priority Pass ($197 for 3 months — leads delivered before free agencies)
+  priorityPassPurchasedAt: timestamp("priority_pass_purchased_at"),
+  priorityPassExpiresAt: timestamp("priority_pass_expires_at"),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
@@ -110,7 +106,8 @@ export const leadMatchStatusEnum = pgEnum("lead_match_status", [
 
 export const billingEventTypeEnum = pgEnum("billing_event_type", [
   "lead_charge",
-  "exclusive_upgrade",
+  "onboarding_fee",
+  "priority_pass",
   "refund",
 ]);
 
@@ -184,7 +181,7 @@ export const leads = pgTable("leads", {
   scoreFactors: jsonb("score_factors").$type<Record<string, number>>(),
   isPrivatePay: boolean("is_private_pay").default(false).notNull(),
   matchCount: integer("match_count").default(0).notNull(),
-  maxMatches: integer("max_matches").default(3).notNull(),
+  maxMatches: integer("max_matches").default(1).notNull(),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
@@ -201,12 +198,16 @@ export const leadMatches = pgTable("lead_matches", {
     .references(() => agencies.id),
   status: leadMatchStatusEnum("status").default("pending").notNull(),
   matchScore: real("match_score"), // 0-100 geo/specialty match quality
-  isExclusive: boolean("is_exclusive").default(false).notNull(),
+  isExclusive: boolean("is_exclusive").default(true).notNull(),
   deliveredAt: timestamp("delivered_at"),
   viewedAt: timestamp("viewed_at"),
   contactedAt: timestamp("contacted_at"),
   acceptedAt: timestamp("accepted_at"),
   passedAt: timestamp("passed_at"),
+  // Admin confirmation (triggers billing)
+  adminConfirmed: boolean("admin_confirmed").default(false).notNull(),
+  adminConfirmedAt: timestamp("admin_confirmed_at"),
+  adminConfirmedByUserId: uuid("admin_confirmed_by_user_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -216,16 +217,11 @@ export const billingEvents = pgTable("billing_events", {
   agencyId: uuid("agency_id")
     .notNull()
     .references(() => agencies.id),
-  leadId: uuid("lead_id")
-    .notNull()
-    .references(() => leads.id),
-  leadMatchId: uuid("lead_match_id")
-    .notNull()
-    .references(() => leadMatches.id),
+  leadId: uuid("lead_id").references(() => leads.id),
+  leadMatchId: uuid("lead_match_id").references(() => leadMatches.id),
   type: billingEventTypeEnum("type").notNull(),
   amountCents: integer("amount_cents").notNull(),
-  careType: careTypeEnum("care_type").notNull(),
-  isExclusive: boolean("is_exclusive").default(false).notNull(),
+  careType: careTypeEnum("care_type"),
   stripePaymentIntentId: text("stripe_payment_intent_id"),
   status: billingEventStatusEnum("status").default("pending").notNull(),
   failureReason: text("failure_reason"),

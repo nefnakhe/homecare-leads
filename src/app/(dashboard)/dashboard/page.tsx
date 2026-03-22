@@ -7,9 +7,11 @@ import { useEffect, useState } from "react";
 
 interface AgencyProfile {
   name: string;
-  subscriptionStatus?: string;
+  adminApproved?: boolean;
+  priorityPassExpiresAt?: string | null;
   maxLeadsPerMonth?: number;
   specialties?: string[];
+  stripeCustomerId?: string | null;
 }
 
 interface DashboardStats {
@@ -28,6 +30,7 @@ export default function DashboardPage() {
   const [agency, setAgency] = useState<AgencyProfile | null>(null);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -82,6 +85,27 @@ export default function DashboardPage() {
     fetchData();
   }, [status]);
 
+  async function handleCheckout(type: string) {
+    setCheckoutLoading(true);
+    try {
+      const res = await fetch("/api/stripe/create-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || "Failed to create checkout");
+      }
+    } catch {
+      alert("Failed to create checkout session");
+    } finally {
+      setCheckoutLoading(false);
+    }
+  }
+
   if (status === "loading" || loading) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -95,7 +119,16 @@ export default function DashboardPage() {
 
   if (!session) return null;
 
-  const isSubscribed = agency?.subscriptionStatus === "active";
+  const hasPriorityPass =
+    agency?.priorityPassExpiresAt &&
+    new Date(agency.priorityPassExpiresAt) > new Date();
+
+  const priorityPassDaysLeft = hasPriorityPass
+    ? Math.ceil(
+        (new Date(agency!.priorityPassExpiresAt!).getTime() - Date.now()) /
+          (1000 * 60 * 60 * 24)
+      )
+    : 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -110,7 +143,7 @@ export default function DashboardPage() {
                 Complete Your Onboarding
               </h2>
               <p className="text-sm text-amber-700 mt-1">
-                Set up your agency profile to start receiving qualified leads.
+                Set up your agency profile to start receiving qualified leads — free to join.
               </p>
             </div>
             <Link
@@ -119,6 +152,19 @@ export default function DashboardPage() {
             >
               Get Started
             </Link>
+          </div>
+        )}
+
+        {/* Pending Admin Approval Banner */}
+        {agency && !agency.adminApproved && (
+          <div className="mb-8 rounded-xl border border-blue-200 bg-blue-50 p-6">
+            <h2 className="text-lg font-semibold text-blue-900">
+              Pending Admin Approval
+            </h2>
+            <p className="text-sm text-blue-700 mt-1">
+              Your agency profile is under review. Once approved, you&apos;ll start receiving qualified leads.
+              This usually takes 1-2 business days.
+            </p>
           </div>
         )}
 
@@ -173,58 +219,43 @@ export default function DashboardPage() {
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                   <p className="text-sm text-gray-500 mb-1">Total Spent</p>
                   <p className="text-3xl font-bold text-gray-900">
-                    ${(stats.totalSpentCents / 100).toFixed(0)}
+                    ${(stats.totalSpentCents / 100).toLocaleString()}
                   </p>
                 </div>
               </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Subscription Status */}
+              {/* Priority Pass Status */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">
-                  Subscription Status
+                  Priority Pass
                 </h2>
-                <div className="flex items-center gap-3 mb-4">
-                  <span
-                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${
-                      isSubscribed
-                        ? "bg-green-50 text-green-700 border border-green-200"
-                        : "bg-gray-100 text-gray-600 border border-gray-200"
-                    }`}
-                  >
-                    <span
-                      className={`w-2 h-2 rounded-full ${
-                        isSubscribed ? "bg-green-500" : "bg-gray-400"
-                      }`}
-                    />
-                    {isSubscribed ? "Active" : "Inactive"}
-                  </span>
-                </div>
-                {isSubscribed ? (
-                  <p className="text-sm text-gray-600">
-                    Up to <span className="font-semibold">{agency.maxLeadsPerMonth ?? "N/A"}</span> leads/month
-                  </p>
+                {hasPriorityPass ? (
+                  <>
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-violet-50 text-violet-700 border border-violet-200">
+                        <span className="w-2 h-2 rounded-full bg-violet-500" />
+                        Active
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      <span className="font-semibold">{priorityPassDaysLeft} days</span> remaining — leads are delivered to you first.
+                    </p>
+                  </>
                 ) : (
-                  <Link
-                    href="/#pricing"
-                    className="inline-flex items-center text-sm font-medium text-[#2563eb] hover:text-[#1d4ed8] transition"
-                  >
-                    Subscribe to a plan
-                    <svg
-                      className="w-4 h-4 ml-1"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                  <>
+                    <p className="text-sm text-gray-600 mb-3">
+                      Get leads delivered before other agencies for 3 months.
+                    </p>
+                    <button
+                      onClick={() => handleCheckout("priority_pass")}
+                      disabled={checkoutLoading}
+                      className="inline-flex items-center text-sm font-medium bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700 transition disabled:opacity-50"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </Link>
+                      {checkoutLoading ? "Loading..." : "Get Priority Pass — $197"}
+                    </button>
+                  </>
                 )}
               </div>
 
@@ -252,6 +283,42 @@ export default function DashboardPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </Link>
+                  {!agency.stripeCustomerId && (
+                    <button
+                      onClick={() => handleCheckout("setup_payment")}
+                      disabled={checkoutLoading}
+                      className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group text-left"
+                    >
+                      <span className="text-sm font-medium text-blue-600">Set Up Payment Method</span>
+                      <svg className="w-4 h-4 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Per-lead pricing info */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">
+                Per-Lead Pricing
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <p className="text-sm text-gray-500">Onboarding Fee</p>
+                  <p className="text-2xl font-bold text-gray-900">$300</p>
+                  <p className="text-xs text-gray-500">per confirmed lead</p>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <p className="text-sm text-gray-500">Lead Fee</p>
+                  <p className="text-2xl font-bold text-gray-900">$2,000</p>
+                  <p className="text-xs text-gray-500">per confirmed lead</p>
+                </div>
+                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                  <p className="text-sm text-blue-600 font-medium">Total per Lead</p>
+                  <p className="text-2xl font-bold text-blue-700">$2,300</p>
+                  <p className="text-xs text-blue-500">charged on admin confirmation</p>
                 </div>
               </div>
             </div>

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { stripe } from "@/lib/stripe";
+import { stripe, PRIORITY_PASS } from "@/lib/stripe";
 import { db } from "@/db";
 import { agencies } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -13,13 +13,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { priceId } = await req.json();
-    if (!priceId) {
-      return NextResponse.json(
-        { error: "Price ID is required" },
-        { status: 400 }
-      );
-    }
+    const { type } = await req.json();
 
     const userId = (session.user as { id: string }).id;
 
@@ -52,17 +46,49 @@ export async function POST(req: Request) {
         .where(eq(agencies.id, agency.id));
     }
 
-    const checkoutSession = await stripe.checkout.sessions.create({
-      customer: customerId,
-      mode: "subscription",
-      payment_method_types: ["card"],
-      line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${process.env.NEXTAUTH_URL}/dashboard?subscription=success`,
-      cancel_url: `${process.env.NEXTAUTH_URL}/dashboard?subscription=cancelled`,
-      metadata: { agencyId: agency.id },
-    });
+    if (type === "priority_pass") {
+      // Priority Pass: one-time $197 charge
+      const checkoutSession = await stripe.checkout.sessions.create({
+        customer: customerId,
+        mode: "payment",
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: "Priority Pass — 3 Months",
+                description:
+                  "Get leads delivered before free agencies for 3 months",
+              },
+              unit_amount: PRIORITY_PASS.priceCents,
+            },
+            quantity: 1,
+          },
+        ],
+        success_url: `${process.env.NEXTAUTH_URL}/dashboard?priority_pass=success`,
+        cancel_url: `${process.env.NEXTAUTH_URL}/dashboard?priority_pass=cancelled`,
+        metadata: { agencyId: agency.id, type: "priority_pass" },
+      });
 
-    return NextResponse.json({ url: checkoutSession.url });
+      return NextResponse.json({ url: checkoutSession.url });
+    }
+
+    if (type === "setup_payment") {
+      // Setup payment method for per-lead billing (no charge now)
+      const checkoutSession = await stripe.checkout.sessions.create({
+        customer: customerId,
+        mode: "setup",
+        payment_method_types: ["card"],
+        success_url: `${process.env.NEXTAUTH_URL}/dashboard?payment_setup=success`,
+        cancel_url: `${process.env.NEXTAUTH_URL}/dashboard?payment_setup=cancelled`,
+        metadata: { agencyId: agency.id, type: "setup_payment" },
+      });
+
+      return NextResponse.json({ url: checkoutSession.url });
+    }
+
+    return NextResponse.json({ error: "Invalid checkout type" }, { status: 400 });
   } catch (error) {
     console.error("Stripe checkout error:", error);
     return NextResponse.json(
