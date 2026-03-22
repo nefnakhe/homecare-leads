@@ -54,7 +54,11 @@ export async function POST(req: Request) {
       emailVerifyExpires: verifyExpires,
     });
 
-    await sendVerificationEmail(normalizedEmail, verifyToken);
+    try {
+      await sendVerificationEmail(normalizedEmail, verifyToken);
+    } catch (emailError) {
+      console.error("Verification email failed:", emailError);
+    }
 
     return NextResponse.json(
       { message: "Account created. Check your email to verify." },
