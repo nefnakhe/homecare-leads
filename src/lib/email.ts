@@ -99,6 +99,47 @@ export async function sendLeadNotificationEmail(
   });
 }
 
+export async function sendLeadIntroEmail(
+  familyEmail: string,
+  familyFirstName: string,
+  agencyName: string,
+  agencyPhone: string,
+  lead: {
+    careType: string;
+    city?: string | null;
+    state?: string | null;
+  }
+) {
+  const careLabel = lead.careType.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  const location = [lead.city, lead.state].filter(Boolean).join(", ");
+
+  await sendEmail({
+    to: familyEmail,
+    subject: `Great news — ${agencyName} wants to help with your care needs`,
+    html: `
+      <div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
+        <h2 style="color:#2563eb;">Good News, ${familyFirstName}!</h2>
+        <p>A qualified home care agency in your area has accepted your care request and would like to connect with you.</p>
+        <div style="background:#f0f9ff;border-radius:8px;padding:20px;margin:16px 0;border-left:4px solid #2563eb;">
+          <p style="margin:0 0 8px;"><strong>Agency:</strong> ${agencyName}</p>
+          ${agencyPhone ? `<p style="margin:0 0 8px;"><strong>Phone:</strong> <a href="tel:${agencyPhone}">${agencyPhone}</a></p>` : ""}
+          <p style="margin:0 0 8px;"><strong>Care Type:</strong> ${careLabel}</p>
+          ${location ? `<p style="margin:0;"><strong>Your Area:</strong> ${location}</p>` : ""}
+        </div>
+        <p><strong>What happens next?</strong></p>
+        <ul>
+          <li>${agencyName} will reach out to you shortly to discuss your care needs</li>
+          <li>Feel free to call them directly if you'd like to get started sooner</li>
+          <li>There is no obligation — this introduction is provided as part of our matching service</li>
+        </ul>
+        <p style="color:#6b7280;font-size:13px;margin-top:24px;">
+          This email was sent by HomeCare Leads. You received this because you submitted a care request through our platform.
+        </p>
+      </div>
+    `,
+  });
+}
+
 export async function sendPasswordResetEmail(email: string, token: string) {
   const url = `${BASE_URL}/reset-password?token=${token}`;
   await sendEmail({

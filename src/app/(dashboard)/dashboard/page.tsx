@@ -12,10 +12,21 @@ interface AgencyProfile {
   specialties?: string[];
 }
 
+interface DashboardStats {
+  totalLeads: number;
+  newLeads: number;
+  acceptedLeads: number;
+  passedLeads: number;
+  hotLeads: number;
+  actionableLeads: number;
+  totalSpentCents: number;
+}
+
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [agency, setAgency] = useState<AgencyProfile | null>(null);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,20 +38,48 @@ export default function DashboardPage() {
   useEffect(() => {
     if (status !== "authenticated") return;
 
-    async function fetchProfile() {
+    async function fetchData() {
       try {
-        const res = await fetch("/api/onboarding");
-        if (res.ok) {
-          const data = await res.json();
+        const [profileRes, leadsRes, billingRes] = await Promise.all([
+          fetch("/api/onboarding"),
+          fetch("/api/leads/mine"),
+          fetch("/api/billing"),
+        ]);
+
+        if (profileRes.ok) {
+          const data = await profileRes.json();
           setAgency(data.agency ?? null);
         }
+
+        let leadsData: { leads: Array<{ matchStatus: string; score: string | null }> } = { leads: [] };
+        if (leadsRes.ok) {
+          leadsData = await leadsRes.json();
+        }
+
+        let billingData: { summary: { totalChargedCents: number } } = { summary: { totalChargedCents: 0 } };
+        if (billingRes.ok) {
+          billingData = await billingRes.json();
+        }
+
+        const allLeads = leadsData.leads ?? [];
+        setStats({
+          totalLeads: allLeads.length,
+          newLeads: allLeads.filter((l) => l.matchStatus === "delivered").length,
+          acceptedLeads: allLeads.filter((l) => l.matchStatus === "accepted").length,
+          passedLeads: allLeads.filter((l) => l.matchStatus === "passed").length,
+          hotLeads: allLeads.filter((l) => l.score === "hot").length,
+          actionableLeads: allLeads.filter(
+            (l) => !["accepted", "passed", "expired"].includes(l.matchStatus)
+          ).length,
+          totalSpentCents: billingData.summary?.totalChargedCents ?? 0,
+        });
       } catch {
         // silently fail — user sees onboarding banner
       } finally {
         setLoading(false);
       }
     }
-    fetchProfile();
+    fetchData();
   }, [status]);
 
   if (status === "loading" || loading) {
@@ -96,6 +135,50 @@ export default function DashboardPage() {
               </p>
             </div>
 
+            {/* Action banner if there are leads needing action */}
+            {stats && stats.actionableLeads > 0 && (
+              <div className="rounded-xl border border-blue-200 bg-blue-50 p-5 flex items-center justify-between">
+                <div>
+                  <p className="font-semibold text-blue-900">
+                    {stats.actionableLeads} lead{stats.actionableLeads !== 1 ? "s" : ""} need your attention
+                  </p>
+                  <p className="text-sm text-blue-700 mt-0.5">
+                    Review and accept or pass on delivered leads to keep your pipeline moving.
+                  </p>
+                </div>
+                <Link
+                  href="/dashboard/leads"
+                  className="shrink-0 bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition"
+                >
+                  Review Leads
+                </Link>
+              </div>
+            )}
+
+            {/* Stats Grid */}
+            {stats && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+                  <p className="text-sm text-gray-500 mb-1">Total Leads</p>
+                  <p className="text-3xl font-bold text-gray-900">{stats.totalLeads}</p>
+                </div>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+                  <p className="text-sm text-gray-500 mb-1">Hot Leads</p>
+                  <p className="text-3xl font-bold text-red-600">{stats.hotLeads}</p>
+                </div>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+                  <p className="text-sm text-gray-500 mb-1">Accepted</p>
+                  <p className="text-3xl font-bold text-emerald-600">{stats.acceptedLeads}</p>
+                </div>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+                  <p className="text-sm text-gray-500 mb-1">Total Spent</p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    ${(stats.totalSpentCents / 100).toFixed(0)}
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Subscription Status */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -118,7 +201,11 @@ export default function DashboardPage() {
                     {isSubscribed ? "Active" : "Inactive"}
                   </span>
                 </div>
-                {!isSubscribed && (
+                {isSubscribed ? (
+                  <p className="text-sm text-gray-600">
+                    Up to <span className="font-semibold">{agency.maxLeadsPerMonth ?? "N/A"}</span> leads/month
+                  </p>
+                ) : (
                   <Link
                     href="/#pricing"
                     className="inline-flex items-center text-sm font-medium text-[#2563eb] hover:text-[#1d4ed8] transition"
@@ -141,53 +228,32 @@ export default function DashboardPage() {
                 )}
               </div>
 
-              {/* Quick Stats */}
+              {/* Quick Actions */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">
-                  Quick Stats
+                  Quick Actions
                 </h2>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-3xl font-bold text-gray-900">0</p>
-                    <p className="text-sm text-gray-500 mt-1">
-                      Leads This Month
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-3xl font-bold text-gray-900">0</p>
-                    <p className="text-sm text-gray-500 mt-1">Active Leads</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Your Subscription Card */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">
-                Your Subscription
-              </h2>
-              {isSubscribed ? (
-                <p className="text-gray-600">
-                  Your subscription is active. You can receive up to{" "}
-                  <span className="font-semibold text-gray-900">
-                    {agency.maxLeadsPerMonth ?? "N/A"}
-                  </span>{" "}
-                  leads per month.
-                </p>
-              ) : (
-                <div>
-                  <p className="text-gray-600 mb-4">
-                    You don&apos;t have an active subscription yet. Choose a plan
-                    to start receiving leads.
-                  </p>
+                <div className="space-y-2">
                   <Link
-                    href="/#pricing"
-                    className="inline-flex bg-[#2563eb] text-white px-5 py-2.5 rounded-lg font-medium hover:bg-[#1d4ed8] transition"
+                    href="/dashboard/leads"
+                    className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group"
                   >
-                    Choose a Plan
+                    <span className="text-sm font-medium text-gray-900">View Lead Pipeline</span>
+                    <svg className="w-4 h-4 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                  <Link
+                    href="/dashboard/billing"
+                    className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group"
+                  >
+                    <span className="text-sm font-medium text-gray-900">Billing History</span>
+                    <svg className="w-4 h-4 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </Link>
                 </div>
-              )}
+              </div>
             </div>
           </div>
         )}
@@ -221,7 +287,7 @@ function Nav() {
           </Link>
           <Link
             href="/dashboard"
-            className="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
+            className="text-sm font-medium text-blue-600 hover:text-blue-800 transition"
           >
             Dashboard
           </Link>
@@ -230,6 +296,12 @@ function Nav() {
             className="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
           >
             Leads
+          </Link>
+          <Link
+            href="/dashboard/billing"
+            className="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
+          >
+            Billing
           </Link>
         </div>
         <button

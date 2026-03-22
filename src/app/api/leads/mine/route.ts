@@ -30,9 +30,12 @@ export async function GET() {
         matchId: leadMatches.id,
         matchStatus: leadMatches.status,
         matchScore: leadMatches.matchScore,
+        isExclusive: leadMatches.isExclusive,
         deliveredAt: leadMatches.deliveredAt,
         viewedAt: leadMatches.viewedAt,
         contactedAt: leadMatches.contactedAt,
+        acceptedAt: leadMatches.acceptedAt,
+        passedAt: leadMatches.passedAt,
         leadId: leads.id,
         firstName: leads.firstName,
         lastName: leads.lastName,
@@ -75,7 +78,7 @@ export async function PATCH(req: Request) {
 
     const { matchId, status } = await req.json();
 
-    if (!matchId || !["viewed", "contacted"].includes(status)) {
+    if (!matchId || !["viewed", "contacted", "accepted", "passed"].includes(status)) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
 
@@ -92,6 +95,8 @@ export async function PATCH(req: Request) {
     const updateData: Record<string, unknown> = { status };
     if (status === "viewed") updateData.viewedAt = new Date();
     if (status === "contacted") updateData.contactedAt = new Date();
+    if (status === "accepted") updateData.acceptedAt = new Date();
+    if (status === "passed") updateData.passedAt = new Date();
 
     await db
       .update(leadMatches)

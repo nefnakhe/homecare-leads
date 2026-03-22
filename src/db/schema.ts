@@ -100,7 +100,22 @@ export const leadMatchStatusEnum = pgEnum("lead_match_status", [
   "delivered",
   "viewed",
   "contacted",
+  "accepted",
+  "passed",
   "expired",
+]);
+
+export const billingEventTypeEnum = pgEnum("billing_event_type", [
+  "lead_charge",
+  "exclusive_upgrade",
+  "refund",
+]);
+
+export const billingEventStatusEnum = pgEnum("billing_event_status", [
+  "pending",
+  "succeeded",
+  "failed",
+  "refunded",
 ]);
 
 export const careTypeEnum = pgEnum("care_type", [
@@ -183,9 +198,34 @@ export const leadMatches = pgTable("lead_matches", {
     .references(() => agencies.id),
   status: leadMatchStatusEnum("status").default("pending").notNull(),
   matchScore: real("match_score"), // 0-100 geo/specialty match quality
+  isExclusive: boolean("is_exclusive").default(false).notNull(),
   deliveredAt: timestamp("delivered_at"),
   viewedAt: timestamp("viewed_at"),
   contactedAt: timestamp("contacted_at"),
+  acceptedAt: timestamp("accepted_at"),
+  passedAt: timestamp("passed_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ── Billing Events (audit trail) ─────────────────────────────────────
+export const billingEvents = pgTable("billing_events", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  agencyId: uuid("agency_id")
+    .notNull()
+    .references(() => agencies.id),
+  leadId: uuid("lead_id")
+    .notNull()
+    .references(() => leads.id),
+  leadMatchId: uuid("lead_match_id")
+    .notNull()
+    .references(() => leadMatches.id),
+  type: billingEventTypeEnum("type").notNull(),
+  amountCents: integer("amount_cents").notNull(),
+  careType: careTypeEnum("care_type").notNull(),
+  isExclusive: boolean("is_exclusive").default(false).notNull(),
+  stripePaymentIntentId: text("stripe_payment_intent_id"),
+  status: billingEventStatusEnum("status").default("pending").notNull(),
+  failureReason: text("failure_reason"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
