@@ -11,6 +11,8 @@ import {
   real,
 } from "drizzle-orm/pg-core";
 
+export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
+
 export const subscriptionStatusEnum = pgEnum("subscription_status", [
   "trialing",
   "active",
@@ -36,6 +38,7 @@ export const users = pgTable("users", {
   emailVerifyExpires: timestamp("email_verify_expires"),
   passwordResetToken: text("password_reset_token"),
   passwordResetExpires: timestamp("password_reset_expires"),
+  role: userRoleEnum("role").default("user").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -227,6 +230,49 @@ export const billingEvents = pgTable("billing_events", {
   status: billingEventStatusEnum("status").default("pending").notNull(),
   failureReason: text("failure_reason"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ── Disputes ────────────────────────────────────────────────────────
+export const disputeReasonEnum = pgEnum("dispute_reason", [
+  "invalid_contact",
+  "not_private_pay",
+  "wrong_location",
+  "duplicate_lead",
+  "not_seeking_care",
+  "other",
+]);
+
+export const disputeStatusEnum = pgEnum("dispute_status", [
+  "open",
+  "under_review",
+  "approved",
+  "denied",
+]);
+
+export const disputes = pgTable("disputes", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  agencyId: uuid("agency_id")
+    .notNull()
+    .references(() => agencies.id),
+  leadId: uuid("lead_id")
+    .notNull()
+    .references(() => leads.id),
+  leadMatchId: uuid("lead_match_id")
+    .notNull()
+    .references(() => leadMatches.id),
+  billingEventId: uuid("billing_event_id")
+    .notNull()
+    .references(() => billingEvents.id),
+  reason: disputeReasonEnum("reason").notNull(),
+  description: text("description").notNull(),
+  status: disputeStatusEnum("status").default("open").notNull(),
+  amountCents: integer("amount_cents").notNull(),
+  adminNote: text("admin_note"),
+  resolvedAt: timestamp("resolved_at"),
+  resolvedByUserId: uuid("resolved_by_user_id"),
+  refundBillingEventId: uuid("refund_billing_event_id"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // ── Sessions (for NextAuth) ──────────────────────────────────────────

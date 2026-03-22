@@ -242,6 +242,12 @@ function Nav() {
           >
             Billing
           </Link>
+          <Link
+            href="/dashboard/disputes"
+            className="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
+          >
+            Disputes
+          </Link>
         </div>
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
