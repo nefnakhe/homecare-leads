@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { GUIDES } from "@/lib/guides";
 
 export default function Home() {
   return (
@@ -7,7 +8,7 @@ export default function Home() {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           <Link href="/" className="text-xl font-bold text-[#2563eb]">
-            HomeCare Leads
+            Private Home Care HQ
           </Link>
           <nav className="hidden md:flex items-center gap-8">
             <a href="#how-it-works" className="text-sm font-medium text-gray-600 hover:text-[#2563eb] transition-colors">
@@ -34,7 +35,7 @@ export default function Home() {
               href="/register"
               className="text-sm font-medium bg-[#2563eb] text-white px-4 py-2 rounded-lg hover:bg-[#1d4ed8] transition-colors"
             >
-              Get Started
+              Join Free
             </Link>
           </div>
         </div>
@@ -45,24 +46,47 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32 sm:pt-28 sm:pb-40">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight">
-              Pre-Qualified Private Pay Home Care Leads
+              Qualified Private-Pay Home Care Leads, Delivered to You
             </h1>
             <p className="mt-6 text-lg sm:text-xl text-blue-100 leading-relaxed max-w-2xl mx-auto">
-              Stop wasting time on unqualified leads. We connect your home health care agency with families who are ready to pay out-of-pocket for quality care.
+              Join free. Pay only when you receive a confirmed, private-pay client. One lead can mean $86,000+ in lifetime revenue for your agency.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/register"
                 className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold rounded-lg bg-white text-[#2563eb] hover:bg-gray-50 transition-colors shadow-lg"
               >
-                Join Free
+                Join Free — No Credit Card
               </Link>
               <a
-                href="#pricing"
+                href="#how-it-works"
                 className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold rounded-lg border-2 border-white text-white hover:bg-white/10 transition-colors"
               >
                 See How It Works
               </a>
+            </div>
+            <p className="mt-6 text-sm text-blue-200">
+              No subscription. No monthly fees. Currently serving Connecticut.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ROI Callout */}
+      <section className="py-12 bg-gray-50 border-b border-gray-100">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div>
+              <p className="text-3xl sm:text-4xl font-bold text-[#2563eb]">$86,000+</p>
+              <p className="mt-2 text-sm text-gray-600">Average lifetime revenue per private-pay client<br /><span className="text-xs text-gray-400">($2,400/mo &times; 3+ years)</span></p>
+            </div>
+            <div>
+              <p className="text-3xl sm:text-4xl font-bold text-[#2563eb]">$1,297</p>
+              <p className="mt-2 text-sm text-gray-600">Your cost per qualified lead<br /><span className="text-xs text-gray-400">Only charged after quality verification</span></p>
+            </div>
+            <div>
+              <p className="text-3xl sm:text-4xl font-bold text-[#2563eb]">66&times;</p>
+              <p className="mt-2 text-sm text-gray-600">Potential return on your lead investment<br /><span className="text-xs text-gray-400">$86K revenue vs $1,297 lead cost</span></p>
             </div>
           </div>
         </div>
@@ -76,7 +100,7 @@ export default function Home() {
               How It Works
             </h2>
             <p className="mt-4 text-lg text-gray-600">
-              Three simple steps to start receiving qualified leads.
+              Start receiving qualified private-pay leads in three steps.
             </p>
           </div>
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
@@ -86,10 +110,10 @@ export default function Home() {
                 <span className="text-2xl font-bold text-[#2563eb]">1</span>
               </div>
               <h3 className="mt-6 text-xl font-semibold text-gray-900">
-                Families Submit Care Requests
+                Join Free &amp; Set Your Service Area
               </h3>
               <p className="mt-3 text-gray-600 leading-relaxed">
-                Families in your area fill out detailed care needs assessments.
+                Create your agency profile in minutes. Tell us which ZIP codes you serve, your specialties, and how many leads you can handle per month. No credit card required.
               </p>
             </div>
             {/* Step 2 */}
@@ -98,10 +122,10 @@ export default function Home() {
                 <span className="text-2xl font-bold text-[#2563eb]">2</span>
               </div>
               <h3 className="mt-6 text-xl font-semibold text-gray-900">
-                We Qualify &amp; Match
+                We Qualify &amp; Match Every Lead
               </h3>
               <p className="mt-3 text-gray-600 leading-relaxed">
-                Every lead is verified as private-pay and matched to agencies by location, specialty, and capacity.
+                Families submit care requests. We verify each one is private-pay, confirm their care needs and timeline, then match them to your agency by location and specialty.
               </p>
             </div>
             {/* Step 3 */}
@@ -110,25 +134,25 @@ export default function Home() {
                 <span className="text-2xl font-bold text-[#2563eb]">3</span>
               </div>
               <h3 className="mt-6 text-xl font-semibold text-gray-900">
-                You Get Pre-Qualified Leads
+                Receive Exclusive, Ready-to-Close Leads
               </h3>
               <p className="mt-3 text-gray-600 leading-relaxed">
-                Receive leads delivered to your inbox with full care details, ready to close.
+                Each lead is sent to one agency only — yours. You get the family&apos;s full care details, contact information, and timeline. No competition, no bidding wars.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Why HomeCare Leads Section */}
+      {/* Why Private Home Care HQ */}
       <section className="py-20 sm:py-28 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
-              Why HomeCare Leads
+              Why Agencies Choose Private Home Care HQ
             </h2>
             <p className="mt-4 text-lg text-gray-600">
-              Built specifically for home health care agencies that want quality over quantity.
+              We built this for agencies that are tired of unqualified referrals and shared lead lists.
             </p>
           </div>
           <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-10">
@@ -139,9 +163,21 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg>
               </div>
-              <h3 className="mt-4 text-lg font-semibold text-gray-900">Private Pay Only</h3>
+              <h3 className="mt-4 text-lg font-semibold text-gray-900">100% Private Pay</h3>
               <p className="mt-2 text-gray-600 leading-relaxed">
-                Every lead is pre-screened. No more wasting time on Medicaid-eligible inquiries.
+                Every lead is pre-screened for private-pay ability. No Medicaid inquiries, no insurance headaches. These are families ready to pay out of pocket for quality care.
+              </p>
+            </div>
+            {/* Exclusive */}
+            <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
+              <div className="w-12 h-12 rounded-lg bg-[#2563eb]/10 flex items-center justify-center">
+                <svg className="w-6 h-6 text-[#2563eb]" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                </svg>
+              </div>
+              <h3 className="mt-4 text-lg font-semibold text-gray-900">Exclusive Leads — Never Shared</h3>
+              <p className="mt-2 text-gray-600 leading-relaxed">
+                Every lead goes to one agency. No shared lists, no bidding wars, no race to the phone. When a family is matched to you, they&apos;re yours.
               </p>
             </div>
             {/* Geo-Matched */}
@@ -152,33 +188,21 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                 </svg>
               </div>
-              <h3 className="mt-4 text-lg font-semibold text-gray-900">Geo-Matched to Your Service Area</h3>
+              <h3 className="mt-4 text-lg font-semibold text-gray-900">Matched to Your Service Area</h3>
               <p className="mt-2 text-gray-600 leading-relaxed">
-                Only receive leads from families in ZIP codes you serve.
+                You set the ZIP codes you serve. We only send you leads from families in your coverage area, matched to your specialties and capacity.
               </p>
             </div>
-            {/* Real-Time Delivery */}
-            <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
-              <div className="w-12 h-12 rounded-lg bg-[#2563eb]/10 flex items-center justify-center">
-                <svg className="w-6 h-6 text-[#2563eb]" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
-                </svg>
-              </div>
-              <h3 className="mt-4 text-lg font-semibold text-gray-900">Real-Time Delivery</h3>
-              <p className="mt-2 text-gray-600 leading-relaxed">
-                Leads delivered instantly via email and SMS. First to respond wins.
-              </p>
-            </div>
-            {/* Free to Join */}
+            {/* Quality Guarantee */}
             <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
               <div className="w-12 h-12 rounded-lg bg-[#2563eb]/10 flex items-center justify-center">
                 <svg className="w-6 h-6 text-[#2563eb]" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg>
               </div>
-              <h3 className="mt-4 text-lg font-semibold text-gray-900">Free to Join</h3>
+              <h3 className="mt-4 text-lg font-semibold text-gray-900">Admin-Verified Quality</h3>
               <p className="mt-2 text-gray-600 leading-relaxed">
-                No subscription. No monthly fees. You only pay when you receive a confirmed, qualified lead.
+                Every lead is confirmed by our team before you&apos;re charged. If a lead turns out to be unqualified, submit a dispute and get a full refund. You never pay for bad leads.
               </p>
             </div>
           </div>
@@ -190,19 +214,19 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
-              Simple, Pay-Per-Lead Pricing
+              Simple, Transparent Pricing
             </h2>
             <p className="mt-4 text-lg text-gray-600">
-              Join free. Receive qualified, exclusive leads. Pay only for confirmed leads.
+              Join free. Pay only when you receive a confirmed, qualified lead. One private-pay client can generate $86,000+ in lifetime revenue — your lead cost is a fraction of that.
             </p>
           </div>
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {/* Per-Lead Pricing */}
             <div className="rounded-2xl border-2 border-[#2563eb] bg-white p-8 flex flex-col relative shadow-lg">
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#2563eb] text-white text-xs font-semibold px-4 py-1 rounded-full uppercase tracking-wide">
-                Per-Lead
+                Most Popular
               </div>
-              <h3 className="text-lg font-semibold text-gray-900">Qualified Lead</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Pay-Per-Lead</h3>
               <div className="mt-4 flex items-baseline gap-1">
                 <span className="text-4xl font-bold text-gray-900">$1,297</span>
                 <span className="text-gray-500">/lead</span>
@@ -213,31 +237,31 @@ export default function Home() {
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">Free to join — no monthly fees</span>
+                  <span className="text-gray-600">Free to join — no subscription, no upfront cost</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">Exclusive leads — 1 agency per lead</span>
+                  <span className="text-gray-600">Exclusive leads — 1 agency per lead, never shared</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">Pre-qualified private-pay families</span>
+                  <span className="text-gray-600">Pre-qualified, private-pay families only</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">Only charged after quality verification</span>
+                  <span className="text-gray-600">Only charged after admin quality verification</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">Dispute protection on unqualified leads</span>
+                  <span className="text-gray-600">Dispute protection — full refund on bad leads</span>
                 </li>
               </ul>
               <Link
@@ -255,25 +279,25 @@ export default function Home() {
                 <span className="text-4xl font-bold text-gray-900">$197</span>
                 <span className="text-gray-500">/3 months</span>
               </div>
-              <p className="mt-2 text-sm text-gray-500">One-time payment, not a subscription</p>
+              <p className="mt-2 text-sm text-gray-500">One-time payment — jump the queue</p>
               <ul className="mt-8 space-y-4 flex-1">
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">Get leads delivered before free agencies</span>
+                  <span className="text-gray-600">Get leads delivered before free-tier agencies</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">First pick on all exclusive leads</span>
+                  <span className="text-gray-600">First pick on every exclusive lead in your area</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">Priority support</span>
+                  <span className="text-gray-600">Priority support from our team</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -290,6 +314,14 @@ export default function Home() {
               </Link>
             </div>
           </div>
+
+          {/* ROI breakdown */}
+          <div className="mt-12 max-w-2xl mx-auto bg-gray-50 rounded-xl p-6 sm:p-8 text-center">
+            <h3 className="text-lg font-semibold text-gray-900">The Math Speaks for Itself</h3>
+            <p className="mt-3 text-gray-600 leading-relaxed">
+              A typical private-pay home care client pays around $2,400 per month and stays for 3 or more years. That&apos;s $86,000+ in revenue from a single client — versus a one-time lead fee of $1,297. Private-pay clients are the most valuable clients your agency can have, and they stay with you for years.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -304,10 +336,26 @@ export default function Home() {
           <div className="mt-12 space-y-8">
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
               <h3 className="text-lg font-semibold text-gray-900">
+                Is it really free to join?
+              </h3>
+              <p className="mt-3 text-gray-600 leading-relaxed">
+                Yes. There is no subscription, no signup fee, and no monthly cost. You create your profile, set your service area, and start receiving leads. You only pay the $1,297 per-lead fee when you receive a confirmed, qualified lead — and only after our team verifies its quality.
+              </p>
+            </div>
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <h3 className="text-lg font-semibold text-gray-900">
                 What counts as a qualified lead?
               </h3>
               <p className="mt-3 text-gray-600 leading-relaxed">
-                Every lead has been verified as actively seeking private-pay home care. We confirm budget, care needs, timeline, and location before routing.
+                Every lead is verified as a family actively seeking private-pay home care in Connecticut. We confirm their budget, care needs, timeline, and location before matching. Our admin team reviews every lead before you are charged.
+              </p>
+            </div>
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <h3 className="text-lg font-semibold text-gray-900">
+                What if a lead turns out to be bad?
+              </h3>
+              <p className="mt-3 text-gray-600 leading-relaxed">
+                We stand behind our leads. If a confirmed lead turns out to be unqualified — invalid contact information, not actually private-pay, or misrepresented care needs — submit a dispute through your dashboard. Approved disputes receive a full refund.
               </p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
@@ -315,23 +363,23 @@ export default function Home() {
                 How quickly will I receive leads?
               </h3>
               <p className="mt-3 text-gray-600 leading-relaxed">
-                Most agencies receive their first leads within 48 hours of being approved. There&apos;s no subscription required — you only pay $1,297 per confirmed lead.
+                After your profile is approved (typically 1-2 business days), you&apos;ll begin receiving leads as families in your service area submit requests. Lead volume depends on your location and the care types you offer.
               </p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
               <h3 className="text-lg font-semibold text-gray-900">
-                Can I set my service area?
+                Can I control my service area and lead volume?
               </h3>
               <p className="mt-3 text-gray-600 leading-relaxed">
-                Yes. You define the ZIP codes you serve during onboarding. You only receive leads from those areas.
+                Yes. During onboarding, you set the ZIP codes you serve, the types of care you offer (personal care, companion care, skilled nursing, etc.), and your monthly lead capacity. You only receive leads that match your criteria.
               </p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
               <h3 className="text-lg font-semibold text-gray-900">
-                What if a lead doesn&apos;t convert?
+                What is the Priority Pass?
               </h3>
               <p className="mt-3 text-gray-600 leading-relaxed">
-                Every lead is verified before you&apos;re charged. If a confirmed lead turns out to be unqualified (e.g., invalid contact, not private-pay), submit a dispute for a full refund.
+                Priority Pass is an optional $197 upgrade (covers 3 months) that puts your agency at the front of the queue. When a new lead comes in for your area, Priority Pass agencies get first pick before free-tier agencies. Per-lead charges still apply.
               </p>
             </div>
           </div>
@@ -373,13 +421,16 @@ export default function Home() {
           </div>
           <div className="mt-8 text-center">
             <h3 className="text-lg font-semibold text-gray-900 mb-3">Family Resources</h3>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/guides/paying-for-home-care-without-insurance" className="text-[#2563eb] hover:underline text-sm font-medium">
-                How to Pay for Home Care Without Insurance
-              </Link>
-              <Link href="/guides/home-care-costs-connecticut" className="text-[#2563eb] hover:underline text-sm font-medium">
-                Home Care Costs in Connecticut
-              </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 flex-wrap">
+              {GUIDES.map((guide) => (
+                <Link
+                  key={guide.slug}
+                  href={`/guides/${guide.slug}`}
+                  className="text-[#2563eb] hover:underline text-sm font-medium"
+                >
+                  {guide.title}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
@@ -392,7 +443,7 @@ export default function Home() {
             Looking for Home Care?
           </h2>
           <p className="mt-4 text-lg text-blue-100">
-            Tell us about your care needs and we&apos;ll connect you with qualified agencies in your area — free of charge.
+            Tell us about your care needs and we&apos;ll connect you with a qualified, licensed agency in your area — completely free.
           </p>
           <Link
             href="/find-care"
@@ -408,7 +459,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-              <span className="text-lg font-bold text-white">HomeCare Leads</span>
+              <span className="text-lg font-bold text-white">Private Home Care HQ</span>
             </div>
             <div className="flex items-center gap-6 text-sm">
               <a href="#" className="hover:text-white transition-colors">
@@ -421,10 +472,10 @@ export default function Home() {
           </div>
           <div className="mt-8 border-t border-gray-800 pt-8">
             <p className="text-xs text-gray-500 text-center leading-relaxed">
-              HomeCare Leads is a lead generation service. We do not provide home health care services. All care is provided by independently licensed home health care agencies.
+              Private Home Care HQ is a lead generation service. We do not provide home health care services or medical advice. All care is provided by independently licensed home health care agencies. We connect families with licensed providers — we are not a home care agency.
             </p>
             <p className="mt-4 text-xs text-gray-500 text-center">
-              &copy; 2026 HomeCare Leads. All rights reserved.
+              &copy; 2026 Private Home Care HQ. All rights reserved.
             </p>
           </div>
         </div>
