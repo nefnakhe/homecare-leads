@@ -19,6 +19,9 @@ export default function Home() {
             <a href="#faq" className="text-sm font-medium text-gray-600 hover:text-[#2563eb] transition-colors">
               FAQ
             </a>
+            <Link href="/find-care" className="text-sm font-medium text-gray-600 hover:text-[#2563eb] transition-colors">
+              Find Care
+            </Link>
           </nav>
           <div className="flex items-center gap-3">
             <Link
@@ -383,6 +386,24 @@ export default function Home() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Family CTA Section */}
+      <section className="py-16 bg-blue-600">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold text-white">
+            Looking for Home Care?
+          </h2>
+          <p className="mt-4 text-lg text-blue-100">
+            Tell us about your care needs and we&apos;ll connect you with qualified agencies in your area — free of charge.
+          </p>
+          <Link
+            href="/find-care"
+            className="mt-8 inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold rounded-lg bg-white text-blue-600 hover:bg-gray-50 transition-colors shadow-lg"
+          >
+            Find Care Now
+          </Link>
         </div>
       </section>
 

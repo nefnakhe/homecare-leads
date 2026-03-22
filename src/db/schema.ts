@@ -8,6 +8,7 @@ import {
   varchar,
   jsonb,
   pgEnum,
+  real,
 } from "drizzle-orm/pg-core";
 
 export const subscriptionStatusEnum = pgEnum("subscription_status", [
@@ -80,6 +81,112 @@ export const agencies = pgTable("agencies", {
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// ── Lead Pipeline Enums ──────────────────────────────────────────────
+export const leadStatusEnum = pgEnum("lead_status", [
+  "new",
+  "qualified",
+  "disqualified",
+  "matched",
+  "delivered",
+  "expired",
+]);
+
+export const leadScoreEnum = pgEnum("lead_score", ["hot", "warm", "cold"]);
+
+export const leadMatchStatusEnum = pgEnum("lead_match_status", [
+  "pending",
+  "delivered",
+  "viewed",
+  "contacted",
+  "expired",
+]);
+
+export const careTypeEnum = pgEnum("care_type", [
+  "personal_care",
+  "companion_care",
+  "skilled_nursing",
+  "dementia_care",
+  "respite_care",
+  "live_in_care",
+  "post_surgery",
+  "hospice_support",
+  "other",
+]);
+
+export const urgencyEnum = pgEnum("urgency", [
+  "immediate",
+  "within_week",
+  "within_month",
+  "exploring",
+]);
+
+export const paymentTypeEnum = pgEnum("payment_type", [
+  "private_pay",
+  "long_term_care_insurance",
+  "medicare",
+  "medicaid",
+  "va_benefits",
+  "other",
+]);
+
+// ── Leads ────────────────────────────────────────────────────────────
+export const leads = pgTable("leads", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  // Family / requester info
+  firstName: varchar("first_name", { length: 100 }).notNull(),
+  lastName: varchar("last_name", { length: 100 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 20 }).notNull(),
+  relationToPatient: varchar("relation_to_patient", { length: 100 }),
+
+  // Care recipient
+  patientFirstName: varchar("patient_first_name", { length: 100 }),
+  patientAge: integer("patient_age"),
+  careType: careTypeEnum("care_type").notNull(),
+  careDescription: text("care_description"),
+
+  // Location
+  zip: varchar("zip", { length: 10 }).notNull(),
+  city: varchar("city", { length: 100 }),
+  state: varchar("state", { length: 2 }),
+
+  // Urgency & budget
+  urgency: urgencyEnum("urgency").notNull(),
+  paymentType: paymentTypeEnum("payment_type").notNull(),
+  budgetMin: integer("budget_min"),
+  budgetMax: integer("budget_max"),
+  hoursPerWeek: integer("hours_per_week"),
+
+  // Pipeline fields
+  status: leadStatusEnum("status").default("new").notNull(),
+  score: leadScoreEnum("score"),
+  scoreFactors: jsonb("score_factors").$type<Record<string, number>>(),
+  isPrivatePay: boolean("is_private_pay").default(false).notNull(),
+  matchCount: integer("match_count").default(0).notNull(),
+  maxMatches: integer("max_matches").default(3).notNull(),
+
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// ── Lead Matches (lead ↔ agency assignments) ─────────────────────────
+export const leadMatches = pgTable("lead_matches", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  leadId: uuid("lead_id")
+    .notNull()
+    .references(() => leads.id),
+  agencyId: uuid("agency_id")
+    .notNull()
+    .references(() => agencies.id),
+  status: leadMatchStatusEnum("status").default("pending").notNull(),
+  matchScore: real("match_score"), // 0-100 geo/specialty match quality
+  deliveredAt: timestamp("delivered_at"),
+  viewedAt: timestamp("viewed_at"),
+  contactedAt: timestamp("contacted_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // ── Sessions (for NextAuth) ──────────────────────────────────────────

@@ -225,6 +225,12 @@ function Nav() {
           >
             Dashboard
           </Link>
+          <Link
+            href="/dashboard/leads"
+            className="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
+          >
+            Leads
+          </Link>
         </div>
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
