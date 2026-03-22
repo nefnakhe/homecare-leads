@@ -312,12 +312,12 @@ export default function DashboardPage() {
                 </div>
                 <div className="bg-gray-50 rounded-lg p-4">
                   <p className="text-sm text-gray-500">Lead Fee</p>
-                  <p className="text-2xl font-bold text-gray-900">$2,000</p>
+                  <p className="text-2xl font-bold text-gray-900">$997</p>
                   <p className="text-xs text-gray-500">per confirmed lead</p>
                 </div>
                 <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                   <p className="text-sm text-blue-600 font-medium">Total per Lead</p>
-                  <p className="text-2xl font-bold text-blue-700">$2,300</p>
+                  <p className="text-2xl font-bold text-blue-700">$1,297</p>
                   <p className="text-xs text-blue-500">charged on admin confirmation</p>
                 </div>
               </div>

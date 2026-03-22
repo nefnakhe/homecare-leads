@@ -204,10 +204,10 @@ export default function Home() {
               </div>
               <h3 className="text-lg font-semibold text-gray-900">Qualified Lead</h3>
               <div className="mt-4 flex items-baseline gap-1">
-                <span className="text-4xl font-bold text-gray-900">$2,300</span>
+                <span className="text-4xl font-bold text-gray-900">$1,297</span>
                 <span className="text-gray-500">/lead</span>
               </div>
-              <p className="mt-2 text-sm text-gray-500">$300 onboarding + $2,000 lead fee</p>
+              <p className="mt-2 text-sm text-gray-500">$300 onboarding + $997 lead fee</p>
               <ul className="mt-8 space-y-4 flex-1">
                 <li className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -279,7 +279,7 @@ export default function Home() {
                   <svg className="w-5 h-5 text-[#2563eb] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span className="text-gray-600">Per-lead charges still apply ($2,300/lead)</span>
+                  <span className="text-gray-600">Per-lead charges still apply ($1,297/lead)</span>
                 </li>
               </ul>
               <Link
@@ -315,7 +315,7 @@ export default function Home() {
                 How quickly will I receive leads?
               </h3>
               <p className="mt-3 text-gray-600 leading-relaxed">
-                Most agencies receive their first leads within 48 hours of being approved. There&apos;s no subscription required — you only pay $2,300 per confirmed lead.
+                Most agencies receive their first leads within 48 hours of being approved. There&apos;s no subscription required — you only pay $1,297 per confirmed lead.
               </p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">

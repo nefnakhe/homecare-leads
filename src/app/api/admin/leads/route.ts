@@ -163,7 +163,7 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ success: true, action: "rejected" });
     }
 
-    // ── Admin confirms — charge the agency $300 + $2,000 ──
+    // ── Admin confirms — charge the agency $300 + $997 ──
     const [agency] = await db
       .select({
         id: agencies.id,

@@ -190,7 +190,7 @@ export default function AdminPage() {
   async function confirmLead(matchId: string, action: "confirm" | "reject") {
     const confirmMsg =
       action === "confirm"
-        ? "Confirm this lead and charge the agency $2,300?"
+        ? "Confirm this lead and charge the agency $1,297?"
         : "Reject this lead? No charges will be applied.";
     if (!confirm(confirmMsg)) return;
 
@@ -461,7 +461,7 @@ export default function AdminPage() {
                               Pending Review
                             </span>
                           )}
-                          <span className="text-sm font-semibold text-gray-700">$2,300</span>
+                          <span className="text-sm font-semibold text-gray-700">$1,297</span>
                           <svg
                             className={`w-5 h-5 text-gray-400 transition ${expandedLeadId === lead.matchId ? "rotate-180" : ""}`}
                             fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -512,7 +512,7 @@ export default function AdminPage() {
                                 disabled={isLoading || !lead.stripeCustomerId}
                                 className="bg-emerald-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                               >
-                                {isLoading ? "Processing..." : "Confirm & Charge $2,300"}
+                                {isLoading ? "Processing..." : "Confirm & Charge $1,297"}
                               </button>
                               <button
                                 onClick={() => confirmLead(lead.matchId, "reject")}
@@ -530,7 +530,7 @@ export default function AdminPage() {
                           {lead.adminConfirmed && (
                             <div className="mt-4 p-3 bg-emerald-50 rounded-lg">
                               <p className="text-sm text-emerald-700 font-medium">
-                                Confirmed — $2,300 charged to {lead.agencyName}
+                                Confirmed — $1,297 charged to {lead.agencyName}
                                 {lead.adminConfirmedAt && ` on ${formatDate(lead.adminConfirmedAt)}`}
                               </p>
                             </div>

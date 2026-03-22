@@ -31,6 +31,6 @@ export const PRIORITY_PASS = {
 // Per-lead pricing: flat rate charged on admin confirmation
 export const LEAD_FEES = {
   onboardingFeeCents: 30000, // $300 onboarding fee per lead
-  leadFeeCents: 200000, // $2,000 lead fee per lead
-  totalCents: 230000, // $2,300 total per confirmed lead
+  leadFeeCents: 99700, // $997 lead fee per lead
+  totalCents: 129700, // $1,297 total per confirmed lead
 } as const;
