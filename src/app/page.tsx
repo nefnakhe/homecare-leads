@@ -389,6 +389,53 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CT City Pages Section */}
+      <section className="py-20 sm:py-28 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+              Find Home Care in Connecticut
+            </h2>
+            <p className="mt-4 text-lg text-gray-600">
+              We serve families across Connecticut. Find trusted home care agencies in your city.
+            </p>
+          </div>
+          <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            {[
+              { name: "Waterbury", slug: "waterbury-ct" },
+              { name: "Meriden", slug: "meriden-ct" },
+              { name: "Middletown", slug: "middletown-ct" },
+              { name: "Torrington", slug: "torrington-ct" },
+              { name: "Norwich", slug: "norwich-ct" },
+              { name: "New Britain", slug: "new-britain-ct" },
+              { name: "Bristol", slug: "bristol-ct" },
+              { name: "Enfield", slug: "enfield-ct" },
+              { name: "Shelton", slug: "shelton-ct" },
+              { name: "Wallingford", slug: "wallingford-ct" },
+            ].map((city) => (
+              <Link
+                key={city.slug}
+                href={`/${city.slug}`}
+                className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-center hover:border-[#2563eb] hover:shadow-sm transition text-sm font-medium text-gray-700"
+              >
+                {city.name}, CT
+              </Link>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Family Resources</h3>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/guides/paying-for-home-care-without-insurance" className="text-[#2563eb] hover:underline text-sm font-medium">
+                How to Pay for Home Care Without Insurance
+              </Link>
+              <Link href="/guides/home-care-costs-connecticut" className="text-[#2563eb] hover:underline text-sm font-medium">
+                Home Care Costs in Connecticut
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Family CTA Section */}
       <section className="py-16 bg-blue-600">
         <div className="max-w-3xl mx-auto px-4 text-center">
